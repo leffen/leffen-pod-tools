@@ -33,19 +33,6 @@ RUN apt-get update \
     kafkacat \
   && rm -rf /var/lib/apt/lists/*
 
-# RabbitMQ tools
-RUN curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add - \
- && echo "deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang-23.x" > /etc/apt/sources.list.d/bintray.rabbitmq.list \
- && apt-get update \
- && apt-get install --no-install-recommends --yes --force-yes erlang-base \
- && wget -q -O rabbitmq.tar.xz https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.12/rabbitmq-server-generic-unix-3.8.12.tar.xz \
- && tar xf rabbitmq.tar.xz \
- && rm rabbitmq.tar.xz \
- && mv rabbitmq*/ /usr/local/rabbitmq
-ENV PATH="$PATH:/usr/local/rabbitmq/sbin"
-RUN curl -s -O https://raw.githubusercontent.com/rabbitmq/rabbitmq-management/v3.7.14/bin/rabbitmqadmin \
-  && mv rabbitmqadmin /usr/local/bin/ \
-  && chmod +x /usr/local/bin/rabbitmqadmin
 
 RUN pip -q install cqlsh
 
@@ -54,6 +41,16 @@ RUN curl -s -O https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 \
   && chmod +x /usr/local/bin/hey
 
 RUN curl -s https://raw.githubusercontent.com/birdayz/kaf/master/godownloader.sh | BINDIR=/usr/local/bin bash
+
+
+# Sendmail alternative to test with mailhog
+RUN apt-get update \
+    && apt-get install --assume-yes gettext-base \
+    # load mhsendmail from Github
+    && curl --location --output /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+    && chmod +x /usr/local/bin/mhsendmail
+#    && echo 'sendmail_path="/usr/local/bin/mhsendmail --smtp-addr=mailhog_server:1025 --from=no-reply@docker.dev"' > /usr/local/etc/php/conf.d/mailhog.ini
+
 
 # Locale setup
 RUN locale-gen en_US.UTF-8
@@ -67,4 +64,3 @@ RUN groupadd --gid ${UTILS_USER_GID} utils \
     --shell /bin/bash --create-home utils
 USER utils
 WORKDIR /home/utils
-
