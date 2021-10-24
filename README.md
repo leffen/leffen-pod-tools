@@ -40,3 +40,12 @@ Run tests:
 ```
 $ ./run-test
 ```
+
+
+mhsendmail --smtp-addr="mailhog:1025" test@mailhog.local <<EOF
+From: App <app@mailhog.local>
+To: Test <test@mailhog.local>
+Subject: Test message
+
+Some content!
+EOF
