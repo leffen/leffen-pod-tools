@@ -1,6 +1,6 @@
 
 DOCKER_IMAGE=leffen/pod-tools
-VERSION=v0.1.1
+VERSION=v0.1.2
 
 build:
 	docker build -t $(DOCKER_IMAGE):$(VERSION) .

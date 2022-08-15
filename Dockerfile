@@ -30,6 +30,7 @@ RUN apt-get update \
     p7zip-full \
     xz-utils \
     gnupg2 \
+    tidy \
     kafkacat \
   && rm -rf /var/lib/apt/lists/*
 
