@@ -32,6 +32,9 @@ RUN apt-get update \
     gnupg2 \
     tidy \
     kafkacat \
+    pgtop \
+    pgbadger \
+    pg-activity \
   && rm -rf /var/lib/apt/lists/*
 
 
